@@ -88,7 +88,9 @@
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue'
+
+export default defineComponent({
   data () {
     return {
       comleteTasks: 372,
@@ -122,16 +124,14 @@ export default {
     toggle () {
       if (this.openTasks === 0) {
         alert('There are no tasks to complete!')
-      } else { this.modal = !this.modal }
+      } else {
+        this.modal = !this.modal
+      }
     },
     btnYes () {
-      this.comleteTasks = this.comleteTasks + 1
-      this.openTasks = this.openTasks - 1
+      this.comleteTasks++
+      this.openTasks--
     }
   }
-}
+})
 </script>
-
-<style>
-
-</style>
