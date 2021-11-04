@@ -1,7 +1,6 @@
-<template>
-  <div class="app-wrapper">
-    <router-view/>
-  </div>
+<template lang="pug">
+.app-wrapper
+    router-view
 </template>
 
 <style lang='scss'>

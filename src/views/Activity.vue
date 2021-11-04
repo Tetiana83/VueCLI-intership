@@ -1,23 +1,19 @@
-<template>
-  <div class="content-body">
-      <div class="content-wrapper">
-          <div class="today"><p>Today</p></div>
-          <div class="content-section" v-for="activity in activityList" :key="activity.id">
-              <div class="content-text-block" :class="activity.class"><p>{{activity.text}}</p></div>
-              <div class="time"><span>{{activity.time}}</span></div>
-          </div>
-          <div class="content-minibox">
-              <div class="content-minibox-text">
-                  During a project build, it is necessary to evaluate the product design and development against project requirements and outcomes
-              </div>
-          </div>
-          <div class="img-wrapper">
-              <div class="image" v-for="(pic, index) in pictures" :key="index" @click="setNotifiCount(index)">
-                <img :src="pic" alt="picture">
-              </div>
-          </div>
-      </div>
-  </div>
+<template lang="pug">
+.content-body
+  .content-wrapper
+    .today
+      p Today
+    .content-section(v-for='activity in activityList' :key='activity.id')
+      .content-text-block(:class='activity.class')
+        p {{activity.text}}
+      .time
+        span {{activity.time}}
+    .content-minibox
+      .content-minibox-text
+        | During a project build, it is necessary to evaluate the product design and development against project requirements and outcomes
+    .img-wrapper
+      .image(v-for='(pic, index) in pictures' :key='index' @click='setNotifiCount(index)')
+        img(:src='pic' alt='picture')
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
@@ -40,6 +36,7 @@ export default defineComponent({
   },
   methods: {
     setNotifiCount (inx: number) {
+      this.$emit('notifiCount', inx)
       console.log(inx)
       // this.notifiNum = inx
     }
