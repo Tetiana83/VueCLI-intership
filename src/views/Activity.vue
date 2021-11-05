@@ -37,8 +37,6 @@ export default defineComponent({
   methods: {
     setNotifiCount (inx: number) {
       this.$emit('notifiCount', inx)
-      console.log(inx)
-      // this.notifiNum = inx
     }
   }
 })

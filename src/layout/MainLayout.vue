@@ -48,7 +48,7 @@
         ul
           li(v-for='(elem, index) in navBar' :key='index')
             router-link.first(:to='elem.link' :class='{ active: elem.isActive }' @click='navActiveToggle(elem)') {{elem.title}}
-    router-view
+    router-view(@notifiCount="notifiNum = $event")
   #windowWrapper.window-wrapper(v-if='modal' @click='modal = false')
     #askWindow.ask-window
       div
