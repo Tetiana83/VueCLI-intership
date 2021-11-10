@@ -3,11 +3,7 @@
   .content-wrapper
     .today
       p Today
-    .content-section(v-for='activity in activityList' :key='activity.id')
-      .content-text-block(:class='activity.class')
-        p {{activity.text}}
-      .time
-        span {{activity.time}}
+    ActivityComponent(:ListActivity="activityList")
     .content-minibox
       .content-minibox-text
         | During a project build, it is necessary to evaluate the product design and development against project requirements and outcomes
@@ -17,8 +13,11 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
-
+import ActivityComponent from '../components/ActivityComponent.vue'
 export default defineComponent({
+  components: {
+    ActivityComponent
+  },
   data () {
     return {
       pictures: [
