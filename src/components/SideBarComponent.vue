@@ -24,7 +24,7 @@
     .menu-list
       ul
         li Home
-        li My Tasks
+        li(@click='redirectTasks()') My Tasks
         li.notifi
           span {{notifiNum}}
   #windowWrapper.window-wrapper(v-if='modal' @click='modal = false')
@@ -58,6 +58,9 @@ export default defineComponent({
         this.modal = !this.modal
       }
     },
+    redirectTasks () {
+      this.$router.push({ name: 'Task' })
+    },
     btnYes () {
       this.comleteTasks++
       this.openTasks--
@@ -65,3 +68,6 @@ export default defineComponent({
   }
 })
 </script>
+<style scoped>
+
+</style>

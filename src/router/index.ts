@@ -11,6 +11,10 @@ const routes: Array<RouteRecordRaw> = [
       { name: 'Kanban', path: 'kanban', component: () => import('../views/Kanban.vue') },
       { name: 'Files', path: 'files', component: () => import('../views/Files.vue') }
     ]
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    component: () => import('../views/404.vue')
   }
 ]
 

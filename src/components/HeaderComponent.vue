@@ -33,9 +33,9 @@ export default defineComponent({
         'https://i.pravatar.cc/150?img=5'
       ],
       navBar: [
-        { id: 1, title: 'Tasks', link: 'task', isActive: false },
+        { id: 1, title: 'Tasks', link: 'task', isActive: true },
         { id: 2, title: 'Kanban', link: 'kanban', isActive: false },
-        { id: 3, title: 'Activity', link: 'activity', isActive: true },
+        { id: 3, title: 'Activity', link: 'activity', isActive: false },
         { id: 4, title: 'Calendar', link: 'calendar', isActive: false },
         { id: 5, title: 'Files', link: 'files', isActive: false }
       ]

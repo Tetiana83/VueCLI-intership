@@ -257,6 +257,9 @@ body {
     padding: 0;
     overflow: hidden;
 }
+.menu-list > ul > li {
+    cursor: pointer;
+}
 .menu-list span {
     width: 20px;
     height: 20px;

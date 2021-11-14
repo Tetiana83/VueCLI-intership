@@ -10,15 +10,10 @@ import { defineComponent } from 'vue'
 import InavBarElem from '../types/nav-bar.interface'
 
 export default defineComponent({
-  props: {
-    navBar: Array,
-    default: function () {
-      return []
-    }
-  },
+  props: ['navBar'],
   methods: {
     navActiveToggle (elem: InavBarElem) {
-      this.navBar.forEach(element => {
+      this.navBar.forEach((element: { isActive: boolean }) => {
         element.isActive = false
       })
       elem.isActive = true

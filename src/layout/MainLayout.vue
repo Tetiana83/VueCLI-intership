@@ -26,6 +26,9 @@ export default defineComponent({
         workPosition: 'Product Owner'
       }
     }
+  },
+  created () {
+    this.$router.push({ name: 'Task' })
   }
 })
 </script>
