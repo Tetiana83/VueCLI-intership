@@ -1,4 +1,8 @@
 <template lang="pug">
+form.form
+  input(type="text" placeholder="Enter task title" required v-model="title")
+  textarea(type="text" placeholder="Enter task description" required v-model="desc")
+  button(@click="AddTask()") Add
 .content-section(v-for='(task, index) in ListTask' :key='task.id')
   .task-wrapper
     .task-icon(:style="{ 'background-color': task.color }" @click="TaskDone(index)")
@@ -7,18 +11,47 @@
       p {{task.desc}}
     .time
       span {{task.datEnd}}
+    button.task-icon(@click="removeTask(task.id)")
+      svg(xmlns='http://www.w3.org/2000/svg' height='24px' viewbox='0 0 24 24' width='24px' fill='#000000')
+        path(d='M0 0h24v24H0z' fill='none')
+        path(d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z')
 </template>
 <script lang="ts">
+import Itask from '@/types/tasks.interface'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   props: {
     ListTask: Array,
-    taskDone: Function
+    taskDone: Function,
+    taskRemove: Function,
+    taskAdd: Function
+  },
+  data () {
+    return {
+      title: '',
+      desc: '',
+      datEnd: '',
+      color: '#fff'
+    }
   },
   methods: {
     TaskDone (index: number) {
       this.$emit('taskDone', index)
+    },
+    removeTask (id: number) {
+      this.$emit('taskRemove', id)
+    },
+    AddTask () {
+      // console.log(this.ListTask.length + 1)
+      if (this.title !== '' && this.desc !== '') {
+        const task: Itask = { id: 6, title: this.title, desc: this.desc, datEnd: new Date().toLocaleString().split(',')[0], color: this.color }
+        this.title = ''
+        this.desc = ''
+        this.$emit('taskAdd', task)
+      } else {
+        alert('Fill the form, please!')
+      }
     }
   }
 })
@@ -36,6 +69,37 @@ export default defineComponent({
     background-color: ghostwhite;
     border-radius: 50%;
     border: 1px dotted gray;
-    margin-right: 10px;
+    margin: 0 20px;
+  }
+  .form {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 3px;
+    background-color: #f7f6f3;
+    padding: 15px;
+    box-shadow: 0 0 1px ghostwhite;
+  }
+  ::placeholder {
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: italic;
+    color: gray;
+  }
+  .form > input {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: #f7f6f3;
+  }
+  .form > textarea {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: #f7f6f3;
+  }
+  .form > button {
+    font-weight: bold;
+    padding: 10px 0;
+    border-color: rgb(239, 239, 239), rgb(59, 59, 59);
+    cursor: pointer;
   }
 </style>

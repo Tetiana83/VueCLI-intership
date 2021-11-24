@@ -11,12 +11,12 @@ body {
     display: flex;
 }
 .left-wrapper {
-    height: 1117px;
+    min-height: 100vh;
     background-color: #000;
     flex: 0 0 270px;
 }
 .right-wrapper {
-    height: 1117px;
+    min-height: 100vh;
     width: 100%;
 }
 .header {
@@ -25,7 +25,6 @@ body {
 }
 .content-body {
     background-color: #f7f6f3;
-    height: calc(100% - 136px);
     display: flex;
     justify-content: center;
     padding: 30px;
@@ -286,7 +285,7 @@ body {
     text-align: left;
 }
 .content-wrapper {
-    height: 521px;
+    min-height: 521px;
     width: 670px;
     background-color: #fff;
     border-radius: 8px;
