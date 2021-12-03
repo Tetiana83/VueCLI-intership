@@ -298,6 +298,7 @@ body {
     line-height: 20px;
     margin: 0;
     text-align: left;
+    width: 393px;
 }
 .today {
     margin: 0;

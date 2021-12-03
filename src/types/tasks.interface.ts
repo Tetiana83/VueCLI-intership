@@ -4,4 +4,5 @@ export default interface Itask {
     desc: string;
     datEnd: string;
     color: string;
+    new: boolean;
 }
