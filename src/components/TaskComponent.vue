@@ -4,7 +4,7 @@ form.form
   textarea(type="text" placeholder="Enter task description" required v-model="desc")
   button(@click="AddTask()") Add
 transition-group(name='bounce' tag='p')
-  .content-section(v-for='(task, index) in array' :key='task.id' :class="{blink: task.new}")
+  .content-section(v-for='(task, index) in listTaskRender' :key='task.id' :class="{blink: task.new}")
     .task-wrapper
       .task-icon(:style="{ 'background-color': task.color }" @click="TaskDone(index)")
       div
@@ -13,9 +13,7 @@ transition-group(name='bounce' tag='p')
       .time
         span {{task.datEnd}}
       button.task-icon(@click="removeTask(index)")
-        svg(xmlns='http://www.w3.org/2000/svg' height='24px' viewbox='0 0 24 24' width='24px' fill='#000000')
-          path(d='M0 0h24v24H0z' fill='none')
-          path(d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z')
+        img(src='../assets/delete.svg' alt='')
 </template>
 <script lang="ts">
 import Itask from '@/types/tasks.interface'
@@ -36,7 +34,7 @@ export default defineComponent({
       desc: '',
       datEnd: '',
       color: '#fff',
-      array: []
+      listTaskRender: []
     }
   },
   mounted () {
@@ -44,7 +42,7 @@ export default defineComponent({
     // @ts-ignore: Unreachable code error
     this.ListTask.forEach((task: Itask, index) => {
       setTimeout(() => {
-        this.array.push(task)
+        this.listTaskRender.push(task)
       }, 500 * index)
     })
   },
@@ -53,7 +51,7 @@ export default defineComponent({
       this.$emit('taskDone', index)
     },
     removeTask (index: number) {
-      this.array.splice(index, 1)
+      this.listTaskRender.splice(index, 1)
       this.$emit('taskRemove', index)
     },
     AddTask () {
@@ -61,7 +59,7 @@ export default defineComponent({
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore: Unreachable code error
         const task: Itask = { id: this.ListTask.length + 1, title: this.title, desc: this.desc, datEnd: new Date().toLocaleString().split(',')[0], color: this.color, new: true }
-        this.array.unshift(task)
+        this.listTaskRender.unshift(task)
         this.$emit('taskAdd', task)
         this.title = ''
         this.desc = ''
@@ -136,13 +134,16 @@ export default defineComponent({
 
   @keyframes bounce-in {
     0% {
-      transform: scale(1);
+      font-size: 1em;
+      // transform: scale(1);
     }
     50% {
-      transform: scale(1.1);
+      font-size: 1.1em;
+      // transform: scale(1.1);
     }
     100% {
-      transform: scale(1);
+      font-size: 1em;
+      // transform: scale(1);
     }
   }
 </style>

@@ -17,14 +17,18 @@ export default defineComponent({
   },
   data () {
     return {
-      taskList: [
-        { id: 1, title: 'Lesson 1', desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.', datEnd: '31.10.2021', color: '#cf9d9d', new: false },
-        { id: 2, title: 'Lesson 2', desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.', datEnd: '01.11.2021', color: '#a52da7', new: false },
-        { id: 3, title: 'Lesson 3', desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.', datEnd: '03.11.2021', color: '#232daf', new: false },
-        { id: 4, title: 'Lesson 4', desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.', datEnd: '05.11.2021', color: '#23af68', new: false },
-        { id: 5, title: 'Homework', desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.', datEnd: '10.11.2021', color: '#af8a23', new: false }
-      ]
+      taskList: null
     }
+  },
+  created () {
+    const startData = [
+      { id: 1, title: 'Lesson 1', desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.', datEnd: '31.10.2021', color: '#cf9d9d', new: false },
+      { id: 2, title: 'Lesson 2', desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.', datEnd: '01.11.2021', color: '#a52da7', new: false },
+      { id: 3, title: 'Lesson 3', desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.', datEnd: '03.11.2021', color: '#232daf', new: false },
+      { id: 4, title: 'Lesson 4', desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.', datEnd: '05.11.2021', color: '#23af68', new: false },
+      { id: 5, title: 'Homework', desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.', datEnd: '10.11.2021', color: '#af8a23', new: false }
+    ]
+    this.taskList = startData
   },
   methods: {
     taskDone (index: number) {
