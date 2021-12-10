@@ -8,6 +8,7 @@
 
 <script lang="ts">
 import Itask from '@/types/tasks.interface'
+import { StatusTaskEnum } from '../enums/task.status.enum'
 import { defineComponent } from 'vue'
 import TaskComponent from '../components/TaskComponent.vue'
 export default defineComponent({
@@ -22,11 +23,46 @@ export default defineComponent({
   },
   created () {
     const startData = [
-      { id: 1, title: 'Lesson 1', desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.', datEnd: '31.10.2021', color: '#cf9d9d', new: false },
-      { id: 2, title: 'Lesson 2', desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.', datEnd: '01.11.2021', color: '#a52da7', new: false },
-      { id: 3, title: 'Lesson 3', desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.', datEnd: '03.11.2021', color: '#232daf', new: false },
-      { id: 4, title: 'Lesson 4', desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.', datEnd: '05.11.2021', color: '#23af68', new: false },
-      { id: 5, title: 'Homework', desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.', datEnd: '10.11.2021', color: '#af8a23', new: false }
+      {
+        id: 1,
+        title: 'Lesson 1',
+        desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
+        datEnd: '31.10.2021',
+        new: false,
+        status: StatusTaskEnum.Inprogress
+      },
+      {
+        id: 2,
+        title: 'Lesson 2',
+        desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
+        datEnd: '01.11.2021',
+        new: false,
+        status: StatusTaskEnum.Inprogress
+      },
+      {
+        id: 3,
+        title: 'Lesson 3',
+        desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
+        datEnd: '03.11.2021',
+        new: false,
+        status: StatusTaskEnum.Todo
+      },
+      {
+        id: 4,
+        title: 'Lesson 4',
+        desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
+        datEnd: '05.11.2021',
+        new: false,
+        status: StatusTaskEnum.Done
+      },
+      {
+        id: 5,
+        title: 'Homework',
+        desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
+        datEnd: '10.11.2021',
+        new: false,
+        status: StatusTaskEnum.Done
+      }
     ]
     this.taskList = startData
   },
