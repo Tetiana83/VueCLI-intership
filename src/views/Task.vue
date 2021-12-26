@@ -3,14 +3,14 @@
   .content-wrapper
     .today
       p Tasks
-    TaskComponent(@taskDone="taskDone" @taskRemove="taskRemove" :ListTask="taskList" @taskAdd='taskAdd')
+    TaskComponent(@taskDone="taskDone" @taskRemove="taskRemove" :ListTask="taskList")
 </template>
 
 <script lang="ts">
-import Itask from '@/types/tasks.interface'
 import { StatusTaskEnum } from '../enums/task.status.enum'
 import { defineComponent } from 'vue'
 import TaskComponent from '../components/TaskComponent.vue'
+import Itask from '@/types/tasks.interface'
 export default defineComponent({
   name: 'Task',
   components: {
@@ -72,9 +72,6 @@ export default defineComponent({
     },
     taskRemove (index: number) {
       this.taskList.splice(index, 1)
-    },
-    taskAdd (task: Itask) {
-      this.taskList.push(task)
     }
   }
 })

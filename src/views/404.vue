@@ -44,7 +44,7 @@ export default defineComponent({
   button {
     border-radius: 8px;
     padding: 5px;
-    background-color: aquamarine;
+    background-color: beige;
     cursor: pointer;
   }
 </style>

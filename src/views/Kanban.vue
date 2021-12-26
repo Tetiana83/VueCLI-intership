@@ -3,27 +3,42 @@ table.task-table
   tr
     td.col1
       h2 To do
-      .task-wrapper(v-for='task in todoList' :key='task.id')
-        h3 {{task.title}}
-        p {{task.datEnd}}
-    td.col2
+      draggable#todo(v-model='todoList' group='tasks' :move="checkMove" item-key='id')
+        template(#item='{element}')
+          .task-wrapper(@click='taskDetails(element)')
+            h3 {{element.title}}
+            p {{element.datEnd}}
+    td.col2#2
       h2 In Progress
-      .task-wrapper(v-for='task in inProgressList' :key='task.id')
-        h3 {{task.title}}
-        p {{task.datEnd}}
-    td.col3
+      draggable#inprogress(v-model='inProgressList' group='tasks' :move="checkMove" item-key='id')
+        template(#item='{element}')
+          .task-wrapper(@click='taskDetails(element)')
+            h3 {{element.title}}
+            p {{element.datEnd}}
+    td.col3#3
       h2 Done
-      .task-wrapper(v-for='task in doneList' :key='task.id')
-        h3 {{task.title}}
-        p {{task.datEnd}}
+      draggable#done(v-model="doneList" group="tasks" :move="checkMove" item-key="id")
+        template(#item="{element}")
+          .task-wrapper(@click='taskDetails(element)')
+            h3 {{element.title}}
+            p {{element.datEnd}}
+TaskDetailsModalComponent(v-if="modal" :selectedTask="selectedTask" @closeModal="closeModal")
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
+import TaskDetailsModalComponent from '../components/TaskDetailsModalComponent.vue'
 import { StatusTaskEnum } from '@/enums/task.status.enum'
 import Itask from '@/types/tasks.interface'
+import draggable from 'vuedraggable'
 export default defineComponent({
+  components: {
+    draggable,
+    TaskDetailsModalComponent
+  },
   data () {
     return {
+      modal: false,
+      selectedTask: null,
       todoList: [],
       inProgressList: [],
       doneList: []
@@ -83,6 +98,22 @@ export default defineComponent({
         this.doneList.push(task)
       }
     })
+  },
+  methods: {
+    taskDetails (element: Itask) {
+      this.modal = !this.modal
+      this.selectedTask = element
+    },
+    closeModal () {
+      this.modal = false
+    },
+    checkMove (evt: any) {
+      if (evt.to.id === 'todo') {
+        return false
+      } else {
+        return true
+      }
+    }
   }
 })
 </script>
@@ -113,10 +144,31 @@ export default defineComponent({
     background-color: ghostwhite;
     box-shadow: 0 0 1px grey;
     color: #000;
-    padding: 5px;
+    padding: 10px;
     margin: 10px;
     font-weight: 600;
-    font-style: italic;
     cursor: pointer;
+    text-align: center;
+    border-radius: 8px;
+  }
+  .modal-task-wrapper {
+    background-color: ghostwhite;
+    box-shadow: 0 0 1px grey;
+    color: #000;
+    padding: 10px;
+    margin: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 8px;
+    width: 400px;
+  }
+  .modal-task-wrapper > textarea {
+    width: 100%;
+  }
+  .btn-edit {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px;
   }
 </style>

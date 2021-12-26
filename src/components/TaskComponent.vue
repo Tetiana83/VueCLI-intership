@@ -1,40 +1,42 @@
 <template lang="pug">
-form.form
-  .form-content
-    span.task-desc-title
-      input(type="text" placeholder="Enter task title" required v-model="title")
-      textarea(type="text" placeholder="Enter task description" required v-model="desc")
-    .calendar
-      v-date-picker(v-model='datEnd', :min-date='new Date()')
-  button(@click="AddTask()") Add
+button.create(@click='modal = !modal') Create a new task
+AddTaskComponent(@taskAdd="taskAdd" v-if='modal' @toggleModal='toggleModal')
 transition-group(name='bounce' tag='p')
   .content-section(v-for='(task, index) in listTaskRender' :key='task.id' :class="{blink: task.new}")
     .task-wrapper
       .task-icon(:class="{todo: task.status === 'TODO', inprogress: task.status === 'INPROGRESS', done: task.status === 'DONE'}"  @click="TaskDone(index)")
-      div
+      .task-body(@click='taskDetails(task)')
         h3 {{task.title}}
         p {{task.desc}}
       .time
         span {{task.datEnd}}
       button.task-icon(@click="removeTask(index)")
         img(src='../assets/delete.svg' alt='')
+TaskDetailsModalComponent(v-if="editModal" :selectedTask="selectedTask" @updateSelectedTaskDesc="updateSelectedTaskDesc" @closeModal="closeModal")
 </template>
 <script lang="ts">
-import { StatusTaskEnum } from '@/enums/task.status.enum'
 import Itask from '@/types/tasks.interface'
+import AddTaskComponent from '../components/AddTaskComponent.vue'
+import TaskDetailsModalComponent from './TaskDetailsModalComponent.vue'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
+  components: {
+    AddTaskComponent,
+    TaskDetailsModalComponent
+  },
   props: {
     ListTask: {
       type: Array
     },
     taskDone: Function,
-    taskRemove: Function,
-    taskAdd: Function
+    taskRemove: Function
   },
   data () {
     return {
+      editModal: false,
+      modal: false,
+      selectedTask: null,
       title: '',
       desc: '',
       datEnd: '',
@@ -52,6 +54,9 @@ export default defineComponent({
     })
   },
   methods: {
+    toggleModal () {
+      this.modal = !this.modal
+    },
     TaskDone (index: number) {
       this.$emit('taskDone', index)
     },
@@ -59,25 +64,19 @@ export default defineComponent({
       this.listTaskRender.splice(index, 1)
       this.$emit('taskRemove', index)
     },
-    AddTask () {
-      if (this.title !== '' && this.desc !== '' && this.datEnd !== '') {
-        const task: Itask = {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore: Unreachable code error
-          id: this.ListTask.length + 1,
-          title: this.title,
-          desc: this.desc,
-          datEnd: new Date(this.datEnd).toLocaleString().split(',')[0],
-          new: true,
-          status: StatusTaskEnum.Todo
-        }
-        this.listTaskRender.unshift(task)
-        this.$emit('taskAdd', task)
-        this.title = ''
-        this.desc = ''
-      } else {
-        alert('Fill the form, please!')
-      }
+    taskAdd (task: Itask) {
+      task.id = this.listTaskRender.length + 1
+      this.listTaskRender.unshift(task)
+    },
+    taskDetails (element: Itask) {
+      this.editModal = !this.editModal
+      this.selectedTask = element
+    },
+    closeModal () {
+      this.editModal = false
+    },
+    updateSelectedTaskDesc (tempDesc: string) {
+      this.selectedTask.desc = tempDesc
     }
   }
 })
@@ -97,55 +96,6 @@ export default defineComponent({
     border: 1px dotted gray;
     margin: 0 20px;
   }
-  .form {
-    display: flex;
-    flex-direction: column;
-    margin: 20px 0;
-    font-family: Arial, Helvetica, sans-serif;
-    border-radius: 3px;
-    background-color: #f7f6f3;
-    padding: 15px;
-    box-shadow: 0 0 1px ghostwhite;
-  }
-  .form-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  .task-desc-title {
-    display: flex;
-    flex-direction: column;
-    width: 435px;
-  }
-  ::placeholder {
-    font-family: Arial, Helvetica, sans-serif;
-    font-style: italic;
-    color: gray;
-  }
-  .form > input {
-    padding: 10px;
-    margin-bottom: 10px;
-    border: #f7f6f3;
-  }
-  input {
-    height: 20%;
-    margin-bottom: 5px;
-  }
-  textarea {
-    height: 75%;
-  }
-  .form > textarea {
-    padding: 10px;
-    margin-bottom: 10px;
-    border: #f7f6f3;
-  }
-  .form > button {
-    font-weight: bold;
-    padding: 10px 0;
-    border-color: rgb(239, 239, 239), rgb(59, 59, 59);
-    cursor: pointer;
-  }
   .todo {
     background-color: red;
   }
@@ -154,6 +104,12 @@ export default defineComponent({
   }
   .done {
     background-color: green;
+  }
+  .create {
+    margin: 30px 20px 0 20px
+  }
+  .task-body {
+    cursor: pointer;
   }
   /*
     my animations
