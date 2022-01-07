@@ -1,15 +1,26 @@
 <template lang="pug">
-button.create(@click='modal = !modal') Create a new task
-AddTaskComponent(@taskAdd="taskAdd" v-if='modal' @toggleModal='toggleModal')
+.calendar-wrapper(v-if="showCalendar")
+  .calendar
+    v-date-picker(v-model="range" is-range)
+    .calendar-btn-wrapper
+      button(@click="showCalendar = false") Close
+      button(@click="searchingTaskByDateRange()") Search
+.create-search-wrapper
+  button.create(@click="modal = !modal") Create a new task
+  .search
+    input(type="text" placeholder="searching..." v-model="searchTitle")
+    button.calendar-btn(@click="showCalendar = !showCalendar") Calendar
+    button.search-btn(@click="searchingTask()") Search
+AddTaskComponent(@taskAdd="taskAdd" v-if="modal" @toggleModal="toggleModal")
 transition-group(name='bounce' tag='p')
-  .content-section(v-for='(task, index) in listTaskRender' :key='task.id' :class="{blink: task.new}")
+  .content-section(v-for="(task, index) in listTaskRender" :key="task.id" :class="{blink: task.new}")
     .task-wrapper
       .task-icon(:class="{todo: task.status === 'TODO', inprogress: task.status === 'INPROGRESS', done: task.status === 'DONE'}"  @click="TaskDone(index)")
-      .task-body(@click='taskDetails(task)')
+      .task-body(@click="taskDetails(task)")
         h3 {{task.title}}
         p {{task.desc}}
       .time
-        span {{task.datEnd}}
+        span {{getTime(task.datEnd)}}
       button.task-icon(@click="removeTask(index)")
         img(src='../assets/delete.svg' alt='')
 TaskDetailsModalComponent(v-if="editModal" :selectedTask="selectedTask" @updateSelectedTaskDesc="updateSelectedTaskDesc" @closeModal="closeModal")
@@ -19,6 +30,7 @@ import Itask from '@/types/tasks.interface'
 import AddTaskComponent from '../components/AddTaskComponent.vue'
 import TaskDetailsModalComponent from './TaskDetailsModalComponent.vue'
 import { defineComponent } from 'vue'
+import moment from 'moment'
 
 export default defineComponent({
   components: {
@@ -41,7 +53,14 @@ export default defineComponent({
       desc: '',
       datEnd: '',
       color: '#fff',
-      listTaskRender: []
+      listTaskRender: [],
+      searchTitle: null,
+      filteredListTask: [],
+      showCalendar: false,
+      range: {
+        start: null,
+        end: null
+      }
     }
   },
   mounted () {
@@ -77,6 +96,26 @@ export default defineComponent({
     },
     updateSelectedTaskDesc (tempDesc: string) {
       this.selectedTask.desc = tempDesc
+    },
+    getTime (time: string) {
+      return moment(time).format('DD/MM/YYYY')
+    },
+    searchingTask () {
+      this.listTaskRender.forEach((task: Itask) => {
+        if (task.title.includes(this.searchTitle)) {
+          this.filteredListTask.push(task)
+        }
+      })
+      this.listTaskRender = this.filteredListTask
+    },
+    searchingTaskByDateRange () {
+      this.listTaskRender.forEach((task: Itask) => {
+        if (moment(task.datEnd).isBetween(this.range.start, this.range.end)) {
+          this.filteredListTask.push(task)
+        }
+      })
+      this.listTaskRender = this.filteredListTask
+      this.showCalendar = false
     }
   }
 })
@@ -110,6 +149,43 @@ export default defineComponent({
   }
   .task-body {
     cursor: pointer;
+  }
+  .search {
+    display: flex;
+  }
+  .search-btn {
+    cursor: pointer;
+    margin: 0 30px 0 5px ;
+  }
+  .create-search-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .calendar-btn {
+    margin-left: 5px;
+  }
+  .calendar-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  .calendar {
+    display: flex;
+    flex-direction: column;
+  }
+  .calendar-btn-wrapper {
+    padding: 5px 0;
+    display: flex;
+    justify-content: flex-end;
   }
   /*
     my animations

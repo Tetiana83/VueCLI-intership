@@ -10,7 +10,6 @@
 import { StatusTaskEnum } from '../enums/task.status.enum'
 import { defineComponent } from 'vue'
 import TaskComponent from '../components/TaskComponent.vue'
-import Itask from '@/types/tasks.interface'
 export default defineComponent({
   name: 'Task',
   components: {
@@ -25,33 +24,33 @@ export default defineComponent({
     const startData = [
       {
         id: 1,
-        title: 'Lesson 1',
+        title: 'Create a video',
         desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-        datEnd: '31.10.2021',
+        datEnd: '2022-01-22T13:37:41.459+00:00',
         new: false,
         status: StatusTaskEnum.Inprogress
       },
       {
         id: 2,
-        title: 'Lesson 2',
+        title: 'Practical video',
         desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-        datEnd: '01.11.2021',
+        datEnd: '2021-11-01T13:37:41.459+00:00',
         new: false,
         status: StatusTaskEnum.Inprogress
       },
       {
         id: 3,
-        title: 'Lesson 3',
+        title: 'Buy bread',
         desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-        datEnd: '03.11.2021',
+        datEnd: '2022-01-07T13:37:41.459+00:00',
         new: false,
         status: StatusTaskEnum.Todo
       },
       {
         id: 4,
-        title: 'Lesson 4',
+        title: 'Eat bread',
         desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-        datEnd: '05.11.2021',
+        datEnd: '2022-01-05T13:37:41.459+00:00',
         new: false,
         status: StatusTaskEnum.Done
       },
@@ -59,7 +58,7 @@ export default defineComponent({
         id: 5,
         title: 'Homework',
         desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-        datEnd: '10.11.2021',
+        datEnd: '2022-05-10T13:37:41.459+00:00',
         new: false,
         status: StatusTaskEnum.Done
       }

@@ -2,26 +2,26 @@
 table.task-table
   tr
     td.col1
-      h2 To do
+      h2 To do / {{todoList.length}}
       draggable#todo(v-model='todoList' group='tasks' :move="checkMove" item-key='id')
         template(#item='{element}')
-          .task-wrapper(@click='taskDetails(element)')
+          .task-wrapper(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='taskDetails(element)')
             h3 {{element.title}}
-            p {{element.datEnd}}
+            p {{getTime(element.datEnd)}}
     td.col2#2
-      h2 In Progress
+      h2 In Progress / {{inProgressList.length}}
       draggable#inprogress(v-model='inProgressList' group='tasks' :move="checkMove" item-key='id')
         template(#item='{element}')
-          .task-wrapper(@click='taskDetails(element)')
+          .task-wrapper(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='taskDetails(element)')
             h3 {{element.title}}
-            p {{element.datEnd}}
+            p {{getTime(element.datEnd)}}
     td.col3#3
-      h2 Done
+      h2 Done / {{doneList.length}}
       draggable#done(v-model="doneList" group="tasks" :move="checkMove" item-key="id")
         template(#item="{element}")
-          .task-wrapper(@click='taskDetails(element)')
+          .task-wrapper(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='taskDetails(element)')
             h3 {{element.title}}
-            p {{element.datEnd}}
+            p {{getTime(element.datEnd)}}
 TaskDetailsModalComponent(v-if="modal" :selectedTask="selectedTask" @closeModal="closeModal")
 </template>
 <script lang="ts">
@@ -30,6 +30,7 @@ import TaskDetailsModalComponent from '../components/TaskDetailsModalComponent.v
 import { StatusTaskEnum } from '@/enums/task.status.enum'
 import Itask from '@/types/tasks.interface'
 import draggable from 'vuedraggable'
+import moment from 'moment'
 export default defineComponent({
   components: {
     draggable,
@@ -50,7 +51,7 @@ export default defineComponent({
         id: 1,
         title: 'Lesson 1',
         desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-        datEnd: '31.10.2021',
+        datEnd: '2022-01-22T13:37:41.459+00:00',
         new: false,
         status: StatusTaskEnum.Inprogress
       },
@@ -58,7 +59,7 @@ export default defineComponent({
         id: 2,
         title: 'Lesson 2',
         desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-        datEnd: '01.11.2021',
+        datEnd: '2021-11-01T13:37:41.459+00:00',
         new: false,
         status: StatusTaskEnum.Inprogress
       },
@@ -66,7 +67,7 @@ export default defineComponent({
         id: 3,
         title: 'Lesson 3',
         desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-        datEnd: '03.11.2021',
+        datEnd: '2022-01-07T13:37:41.459+00:00',
         new: false,
         status: StatusTaskEnum.Todo
       },
@@ -74,7 +75,7 @@ export default defineComponent({
         id: 4,
         title: 'Lesson 4',
         desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-        datEnd: '05.11.2021',
+        datEnd: '2022-01-05T13:37:41.459+00:00',
         new: false,
         status: StatusTaskEnum.Done
       },
@@ -82,7 +83,7 @@ export default defineComponent({
         id: 5,
         title: 'Homework',
         desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-        datEnd: '10.11.2021',
+        datEnd: '2022-05-10T13:37:41.459+00:00',
         new: false,
         status: StatusTaskEnum.Done
       }
@@ -107,11 +108,34 @@ export default defineComponent({
     closeModal () {
       this.modal = false
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     checkMove (evt: any) {
       if (evt.to.id === 'todo') {
         return false
       } else {
         return true
+      }
+    },
+    isExpired (end: string) {
+      const timeStampEnd = new Date(end).getTime()
+      const timeStampCurrent = new Date().getTime()
+      if (timeStampEnd < timeStampCurrent) {
+        return true
+      } else {
+        return false
+      }
+    },
+    getTime (time: string) {
+      return moment(time).format('DD/MM/YYYY')
+    },
+    isdayBeforExpired (end: string) {
+      const datEndMinusDay = moment(end).subtract(1, 'days')
+      const dateCurrent = moment()
+      const compareDates = moment(datEndMinusDay).isSame(dateCurrent, 'day')
+      if (compareDates) {
+        return true
+      } else {
+        return false
       }
     }
   }
@@ -170,5 +194,11 @@ export default defineComponent({
     display: flex;
     justify-content: flex-end;
     margin: 10px;
+  }
+  .expired {
+    border: 1px solid red;
+  }
+  .dayBeforExpired {
+    border: 1px solid orange;
   }
 </style>
