@@ -6,24 +6,24 @@
       button(@click="showCalendar = false") Close
       button(@click="searchingTaskByDateRange()") Search
 .create-search-wrapper
-  button.create(@click="modal = !modal") Create a new task
+  button.create(@click="isShowModal = !isShowModal") Create a new task
   .search
     input(type="text" placeholder="searching..." v-model="searchTitle")
     button.calendar-btn(@click="showCalendar = !showCalendar") Calendar
     button.search-btn(@click="searchingTask()") Search
-AddTaskComponent(@taskAdd="taskAdd" v-if="modal" @toggleModal="toggleModal")
+AddTaskComponent(@taskAdd="taskAdd" v-if="isShowModal" @toggleModal="toggleModal")
 transition-group(name='bounce' tag='p')
   .content-section(v-for="(task, index) in listTaskRender" :key="task.id" :class="{blink: task.new}")
     .task-wrapper
-      .task-icon(:class="{todo: task.status === 'TODO', inprogress: task.status === 'INPROGRESS', done: task.status === 'DONE'}"  @click="TaskDone(index)")
-      .task-body(@click="taskDetails(task)")
+      .task-icon(:class="{todo: task.status === 'TODO', inprogress: task.status === 'INPROGRESS', done: task.status === 'DONE'}"  @click="doneTask(index)")
+      .task-body(@click="openTaskDetails(task)")
         h3 {{task.title}}
         p {{task.desc}}
       .time
         span {{getTime(task.datEnd)}}
       button.task-icon(@click="removeTask(index)")
         img(src='../assets/delete.svg' alt='')
-TaskDetailsModalComponent(v-if="editModal" :selectedTask="selectedTask" @updateSelectedTaskDesc="updateSelectedTaskDesc" @closeModal="closeModal")
+TaskDetailsModalComponent(v-if="isShowEditModal" :selectedTask="selectedTask" @updateSelectedTask="updateSelectedTask" @closeModal="closeModal")
 </template>
 <script lang="ts">
 import Itask from '@/types/tasks.interface'
@@ -46,8 +46,8 @@ export default defineComponent({
   },
   data () {
     return {
-      editModal: false,
-      modal: false,
+      isShowEditModal: false,
+      isShowModal: false,
       selectedTask: null,
       title: '',
       desc: '',
@@ -74,9 +74,9 @@ export default defineComponent({
   },
   methods: {
     toggleModal () {
-      this.modal = !this.modal
+      this.isShowModal = !this.isShowModal
     },
-    TaskDone (index: number) {
+    doneTask (index: number) {
       this.$emit('taskDone', index)
     },
     removeTask (index: number) {
@@ -87,15 +87,17 @@ export default defineComponent({
       task.id = this.listTaskRender.length + 1
       this.listTaskRender.unshift(task)
     },
-    taskDetails (element: Itask) {
-      this.editModal = !this.editModal
+    openTaskDetails (element: Itask) {
+      this.isShowEditModal = !this.isShowEditModal
       this.selectedTask = element
     },
     closeModal () {
-      this.editModal = false
+      this.isShowEditModal = false
     },
-    updateSelectedTaskDesc (tempDesc: string) {
-      this.selectedTask.desc = tempDesc
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    updateSelectedTask (data: any) {
+      this.selectedTask.title = data.title
+      this.selectedTask.desc = data.desc
     },
     getTime (time: string) {
       return moment(time).format('DD/MM/YYYY')

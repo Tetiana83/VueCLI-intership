@@ -5,24 +5,24 @@ table.task-table
       h2 To do / {{todoList.length}}
       draggable#todo(v-model='todoList' group='tasks' :move="checkMove" item-key='id')
         template(#item='{element}')
-          .task-wrapper(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='taskDetails(element)')
+          .task-wrapper(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='openTaskDetails(element)')
             h3 {{element.title}}
             p {{getTime(element.datEnd)}}
     td.col2#2
       h2 In Progress / {{inProgressList.length}}
       draggable#inprogress(v-model='inProgressList' group='tasks' :move="checkMove" item-key='id')
         template(#item='{element}')
-          .task-wrapper(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='taskDetails(element)')
+          .task-wrapper(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='openTaskDetails(element)')
             h3 {{element.title}}
             p {{getTime(element.datEnd)}}
     td.col3#3
       h2 Done / {{doneList.length}}
       draggable#done(v-model="doneList" group="tasks" :move="checkMove" item-key="id")
         template(#item="{element}")
-          .task-wrapper(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='taskDetails(element)')
+          .task-wrapper(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='openTaskDetails(element)')
             h3 {{element.title}}
             p {{getTime(element.datEnd)}}
-TaskDetailsModalComponent(v-if="modal" :selectedTask="selectedTask" @closeModal="closeModal")
+TaskDetailsModalComponent(v-if="isShowModal" :selectedTask="selectedTask" @updateSelectedTask="updateSelectedTask" @closeModal="closeModal")
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
@@ -38,7 +38,7 @@ export default defineComponent({
   },
   data () {
     return {
-      modal: false,
+      isShowModal: false,
       selectedTask: null,
       todoList: [],
       inProgressList: [],
@@ -101,29 +101,21 @@ export default defineComponent({
     })
   },
   methods: {
-    taskDetails (element: Itask) {
-      this.modal = !this.modal
+    openTaskDetails (element: Itask) {
+      this.isShowModal = !this.isShowModal
       this.selectedTask = element
     },
     closeModal () {
-      this.modal = false
+      this.isShowModal = false
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     checkMove (evt: any) {
-      if (evt.to.id === 'todo') {
-        return false
-      } else {
-        return true
-      }
+      return evt.to.id !== StatusTaskEnum.Todo
     },
     isExpired (end: string) {
       const timeStampEnd = new Date(end).getTime()
       const timeStampCurrent = new Date().getTime()
-      if (timeStampEnd < timeStampCurrent) {
-        return true
-      } else {
-        return false
-      }
+      return timeStampEnd < timeStampCurrent
     },
     getTime (time: string) {
       return moment(time).format('DD/MM/YYYY')
@@ -137,6 +129,12 @@ export default defineComponent({
       } else {
         return false
       }
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    updateSelectedTask (data: any) {
+      this.selectedTask.title = data.title
+      this.selectedTask.desc = data.desc
+      console.log('455', data)
     }
   }
 })

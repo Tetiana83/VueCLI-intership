@@ -1,47 +1,60 @@
 <template lang="pug">
 .window-wrapper
   .modal-task-wrapper
-    h3 {{selectedTask.title}}
+    h3(v-if="!isEdit") {{selectedTask.title}}
+    input(v-else v-model="tempTitle" @input="isTextEdit = true")
     p(v-if="!isEdit") {{selectedTask.desc}}
     textarea(v-else v-model="tempDesc" @input="isTextEdit = true")
-    p {{selectedTask.datEnd}}
+    p {{getTime(selectedTask.datEnd)}}
     .btn-edit
-      button(@click="isEdit = true" v-if="!isEdit") Edit
+      button(@click="isEdit = true" v-if="!isEdit && selectedTask.status !== 'DONE'") Edit
       button(v-if="isEdit" @click="cancelBtn()") Cancel
       button(v-if="isTextEdit" @click="saveBtn()") Save
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
+import moment from 'moment'
+
 export default defineComponent({
   components: {
   },
   props: {
     selectedTask: Object,
     closeModal: Function,
-    updateSelectedTaskDesc: Function
+    updateSelectedTask: Function
   },
   data () {
     return {
       isEdit: false,
       isTextEdit: false,
-      tempDesc: ''
+      tempDesc: '',
+      tempTitle: ''
     }
   },
   mounted () {
     this.tempDesc = this.selectedTask.desc
+    this.tempTitle = this.selectedTask.title
   },
   methods: {
     cancelBtn () {
       this.isEdit = !this.isEdit
       this.isTextEdit = !this.isTextEdit
       this.$emit('closeModal')
+      this.tempTitle = ''
       this.tempDesc = ''
     },
     saveBtn () {
       this.isEdit = !this.isEdit
       this.isTextEdit = !this.isTextEdit
       this.$emit('closeModal')
-      this.$emit('updateSelectedTaskDesc', this.tempDesc)
+      const data = {
+        title: this.tempTitle,
+        desc: this.tempDesc
+      }
+      this.$emit('updateSelectedTask', data)
+    },
+    getTime (time: string) {
+      return moment(time).format('DD/MM/YYYY')
     }
   }
 })

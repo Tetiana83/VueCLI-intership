@@ -23,8 +23,7 @@ export default defineComponent({
     return {
       title: '',
       desc: '',
-      datEnd: '',
-      color: '#fff'
+      datEnd: ''
     }
   },
   methods: {
