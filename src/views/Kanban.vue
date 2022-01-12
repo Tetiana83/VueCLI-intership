@@ -130,11 +130,8 @@ export default defineComponent({
         return false
       }
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    updateSelectedTask (data: any) {
-      this.selectedTask.title = data.title
-      this.selectedTask.desc = data.desc
-      console.log('455', data)
+    updateSelectedTask (data: Itask) {
+      this.selectedTask = Object.assign(this.selectedTask, data)
     }
   }
 })

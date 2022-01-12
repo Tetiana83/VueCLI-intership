@@ -94,10 +94,8 @@ export default defineComponent({
     closeModal () {
       this.isShowEditModal = false
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    updateSelectedTask (data: any) {
-      this.selectedTask.title = data.title
-      this.selectedTask.desc = data.desc
+    updateSelectedTask (data: Itask) {
+      this.selectedTask = Object.assign(this.selectedTask, data)
     },
     getTime (time: string) {
       return moment(time).format('DD/MM/YYYY')

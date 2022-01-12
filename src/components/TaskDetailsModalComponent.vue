@@ -1,10 +1,10 @@
 <template lang="pug">
 .window-wrapper
   .modal-task-wrapper
-    h3(v-if="!isEdit") {{selectedTask.title}}
-    input(v-else v-model="tempTitle" @input="isTextEdit = true")
-    p(v-if="!isEdit") {{selectedTask.desc}}
-    textarea(v-else v-model="tempDesc" @input="isTextEdit = true")
+    input(v-if="isEdit" v-model="form.title" @input="isTextEdit = true")
+    h3(v-else) {{selectedTask.title}}
+    textarea(v-if="isEdit" v-model="form.desc" @input="isTextEdit = true")
+    p(v-else) {{selectedTask.desc}}
     p {{getTime(selectedTask.datEnd)}}
     .btn-edit
       button(@click="isEdit = true" v-if="!isEdit && selectedTask.status !== 'DONE'") Edit
@@ -27,31 +27,27 @@ export default defineComponent({
     return {
       isEdit: false,
       isTextEdit: false,
-      tempDesc: '',
-      tempTitle: ''
+      form: {
+        desc: '',
+        title: ''
+      }
     }
   },
-  mounted () {
-    this.tempDesc = this.selectedTask.desc
-    this.tempTitle = this.selectedTask.title
+  created () {
+    this.form = Object.assign(this.form, this.selectedTask)
   },
   methods: {
     cancelBtn () {
       this.isEdit = !this.isEdit
       this.isTextEdit = !this.isTextEdit
       this.$emit('closeModal')
-      this.tempTitle = ''
-      this.tempDesc = ''
+      this.form = { desc: '', title: '' }
     },
     saveBtn () {
       this.isEdit = !this.isEdit
       this.isTextEdit = !this.isTextEdit
       this.$emit('closeModal')
-      const data = {
-        title: this.tempTitle,
-        desc: this.tempDesc
-      }
-      this.$emit('updateSelectedTask', data)
+      this.$emit('updateSelectedTask', this.form)
     },
     getTime (time: string) {
       return moment(time).format('DD/MM/YYYY')
