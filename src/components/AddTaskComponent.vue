@@ -37,7 +37,7 @@ export default defineComponent({
           new: true,
           status: StatusTaskEnum.Todo
         }
-        this.$emit('taskAdd', task)
+        this.$store.commit('addTask', task)
         this.title = ''
         this.desc = ''
         this.datEnd = ''

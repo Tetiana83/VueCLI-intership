@@ -20,8 +20,7 @@ export default defineComponent({
   },
   props: {
     selectedTask: Object,
-    closeModal: Function,
-    updateSelectedTask: Function
+    closeModal: Function
   },
   data () {
     return {
@@ -47,7 +46,7 @@ export default defineComponent({
       this.isEdit = !this.isEdit
       this.isTextEdit = !this.isTextEdit
       this.$emit('closeModal')
-      this.$emit('updateSelectedTask', this.form)
+      this.$store.commit('updateSelectedTask', this.form)
     },
     getTime (time: string) {
       return moment(time).format('DD/MM/YYYY')

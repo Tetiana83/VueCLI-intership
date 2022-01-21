@@ -47,8 +47,12 @@ export default defineComponent({
     }
   },
   props: {
-    currentUser: Object,
-    notifiNum: Number
+    currentUser: Object
+  },
+  computed: {
+    notifiNum () {
+      return this.$store.state.notifiCount
+    }
   },
   methods: {
     toggle () {

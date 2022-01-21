@@ -22,7 +22,7 @@ table.task-table
           .task-wrapper(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='openTaskDetails(element)')
             h3 {{element.title}}
             p {{getTime(element.datEnd)}}
-TaskDetailsModalComponent(v-if="isShowModal" :selectedTask="selectedTask" @updateSelectedTask="updateSelectedTask" @closeModal="closeModal")
+TaskDetailsModalComponent(v-if="isShowModal" :selectedTask="selectedTask" @closeModal="closeModal")
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
@@ -45,50 +45,13 @@ export default defineComponent({
       doneList: []
     }
   },
+  computed: {
+    ListTask () {
+      return this.$store.state.taskList
+    }
+  },
   created () {
-    const startData: Itask[] = [
-      {
-        id: 1,
-        title: 'Lesson 1',
-        desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-        datEnd: '2022-01-22T13:37:41.459+00:00',
-        new: false,
-        status: StatusTaskEnum.Inprogress
-      },
-      {
-        id: 2,
-        title: 'Lesson 2',
-        desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-        datEnd: '2021-11-01T13:37:41.459+00:00',
-        new: false,
-        status: StatusTaskEnum.Inprogress
-      },
-      {
-        id: 3,
-        title: 'Lesson 3',
-        desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-        datEnd: '2022-01-07T13:37:41.459+00:00',
-        new: false,
-        status: StatusTaskEnum.Todo
-      },
-      {
-        id: 4,
-        title: 'Lesson 4',
-        desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-        datEnd: '2022-01-05T13:37:41.459+00:00',
-        new: false,
-        status: StatusTaskEnum.Done
-      },
-      {
-        id: 5,
-        title: 'Homework',
-        desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-        datEnd: '2022-05-10T13:37:41.459+00:00',
-        new: false,
-        status: StatusTaskEnum.Done
-      }
-    ]
-    startData.forEach((task: Itask) => {
+    this.ListTask.forEach((task: Itask) => {
       if (task.status === StatusTaskEnum.Todo) {
         this.todoList.push(task)
       }
@@ -129,9 +92,6 @@ export default defineComponent({
       } else {
         return false
       }
-    },
-    updateSelectedTask (data: Itask) {
-      this.selectedTask = Object.assign(this.selectedTask, data)
     }
   }
 })

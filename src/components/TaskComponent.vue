@@ -11,9 +11,9 @@
     input(type="text" placeholder="searching..." v-model="searchTitle")
     button.calendar-btn(@click="showCalendar = !showCalendar") Calendar
     button.search-btn(@click="searchingTask()") Search
-AddTaskComponent(@taskAdd="taskAdd" v-if="isShowModal" @toggleModal="toggleModal")
+AddTaskComponent(v-if="isShowModal" @toggleModal="toggleModal")
 transition-group(name='bounce' tag='p')
-  .content-section(v-for="(task, index) in listTaskRender" :key="task.id" :class="{blink: task.new}")
+  .content-section(v-for="(task, index) in ListTask" :key="task.id" :class="{blink: task.new}")
     .task-wrapper
       .task-icon(:class="{todo: task.status === 'TODO', inprogress: task.status === 'INPROGRESS', done: task.status === 'DONE'}"  @click="doneTask(index)")
       .task-body(@click="openTaskDetails(task)")
@@ -23,7 +23,7 @@ transition-group(name='bounce' tag='p')
         span {{getTime(task.datEnd)}}
       button.task-icon(@click="removeTask(index)")
         img(src='../assets/delete.svg' alt='')
-TaskDetailsModalComponent(v-if="isShowEditModal" :selectedTask="selectedTask" @updateSelectedTask="updateSelectedTask" @closeModal="closeModal")
+TaskDetailsModalComponent(v-if="isShowEditModal" :selectedTask="selectedTask" @closeModal="closeModal")
 </template>
 <script lang="ts">
 import Itask from '@/types/tasks.interface'
@@ -37,13 +37,6 @@ export default defineComponent({
     AddTaskComponent,
     TaskDetailsModalComponent
   },
-  props: {
-    ListTask: {
-      type: Array
-    },
-    taskDone: Function,
-    taskRemove: Function
-  },
   data () {
     return {
       isShowEditModal: false,
@@ -53,7 +46,6 @@ export default defineComponent({
       desc: '',
       datEnd: '',
       color: '#fff',
-      listTaskRender: [],
       searchTitle: null,
       filteredListTask: [],
       showCalendar: false,
@@ -63,29 +55,17 @@ export default defineComponent({
       }
     }
   },
-  mounted () {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore: Unreachable code error
-    this.ListTask.forEach((task: Itask, index) => {
-      setTimeout(() => {
-        this.listTaskRender.push(task)
-      }, 500 * index)
-    })
+  computed: {
+    ListTask () {
+      return this.$store.state.taskList
+    }
   },
   methods: {
     toggleModal () {
       this.isShowModal = !this.isShowModal
     },
-    doneTask (index: number) {
-      this.$emit('taskDone', index)
-    },
     removeTask (index: number) {
-      this.listTaskRender.splice(index, 1)
-      this.$emit('taskRemove', index)
-    },
-    taskAdd (task: Itask) {
-      task.id = this.listTaskRender.length + 1
-      this.listTaskRender.unshift(task)
+      this.$store.commit('removeTask', index)
     },
     openTaskDetails (element: Itask) {
       this.isShowEditModal = !this.isShowEditModal
@@ -94,27 +74,14 @@ export default defineComponent({
     closeModal () {
       this.isShowEditModal = false
     },
-    updateSelectedTask (data: Itask) {
-      this.selectedTask = Object.assign(this.selectedTask, data)
-    },
     getTime (time: string) {
       return moment(time).format('DD/MM/YYYY')
     },
     searchingTask () {
-      this.listTaskRender.forEach((task: Itask) => {
-        if (task.title.includes(this.searchTitle)) {
-          this.filteredListTask.push(task)
-        }
-      })
-      this.listTaskRender = this.filteredListTask
+      this.$store.commit('filteredTask', this.searchTitle)
     },
     searchingTaskByDateRange () {
-      this.listTaskRender.forEach((task: Itask) => {
-        if (moment(task.datEnd).isBetween(this.range.start, this.range.end)) {
-          this.filteredListTask.push(task)
-        }
-      })
-      this.listTaskRender = this.filteredListTask
+      this.$store.commit('searchingTaskByDateRange', this.range)
       this.showCalendar = false
     }
   }
@@ -181,6 +148,7 @@ export default defineComponent({
   .calendar {
     display: flex;
     flex-direction: column;
+    width: 100%;
   }
   .calendar-btn-wrapper {
     padding: 5px 0;
