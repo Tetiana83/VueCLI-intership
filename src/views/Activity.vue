@@ -20,12 +20,12 @@ export default defineComponent({
   },
   computed: {
     pictures () {
-      return this.$store.state.pictures
+      return this.$store.state.pictures.pictures
     }
   },
   methods: {
     setNotifiCount (inx: number) {
-      this.$store.commit('setNotifiCount', inx)
+      this.$store.commit('app/setNotifiCount', inx)
     }
   }
 })

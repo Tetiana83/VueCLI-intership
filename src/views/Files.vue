@@ -19,7 +19,7 @@ export default defineComponent({
   },
   computed: {
     pictures () {
-      return this.$store.state.pictures
+      return this.$store.state.pictures.pictures
     }
   }
 })

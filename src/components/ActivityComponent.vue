@@ -11,7 +11,7 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   computed: {
     activityList () {
-      return this.$store.state.activityList
+      return this.$store.state.activities.activityList
     }
   }
 })

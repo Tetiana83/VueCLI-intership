@@ -51,7 +51,7 @@ export default defineComponent({
   },
   computed: {
     notifiNum () {
-      return this.$store.state.notifiCount
+      return this.$store.state.app.notifiCount
     }
   },
   methods: {

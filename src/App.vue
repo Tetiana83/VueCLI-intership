@@ -3,6 +3,24 @@
     router-view
 </template>
 
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  mounted () {
+    if (localStorage.taskList) {
+      // get LS and move to state
+      const array = JSON.parse(localStorage.taskList)
+      this.$store.commit('tasks/initState', array)
+    } else {
+      // get state and move to LS
+      const state = JSON.stringify(this.$store.state.tasks.taskList)
+      localStorage.taskList = state
+    }
+  }
+})
+</script>
+
 <style lang='scss'>
 body {
     margin: 0;

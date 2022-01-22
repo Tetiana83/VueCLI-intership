@@ -57,7 +57,7 @@ export default defineComponent({
   },
   computed: {
     ListTask () {
-      return this.$store.state.taskList
+      return this.$store.state.tasks.taskList
     }
   },
   methods: {
@@ -65,7 +65,7 @@ export default defineComponent({
       this.isShowModal = !this.isShowModal
     },
     removeTask (index: number) {
-      this.$store.commit('removeTask', index)
+      this.$store.commit('tasks/removeTask', index)
     },
     openTaskDetails (element: Itask) {
       this.isShowEditModal = !this.isShowEditModal
@@ -78,10 +78,10 @@ export default defineComponent({
       return moment(time).format('DD/MM/YYYY')
     },
     searchingTask () {
-      this.$store.commit('filteredTask', this.searchTitle)
+      this.$store.commit('tasks/filteredTask', this.searchTitle)
     },
     searchingTaskByDateRange () {
-      this.$store.commit('searchingTaskByDateRange', this.range)
+      this.$store.commit('tasks/searchingTaskByDateRange', this.range)
       this.showCalendar = false
     }
   }

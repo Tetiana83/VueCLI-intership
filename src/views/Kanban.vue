@@ -47,7 +47,7 @@ export default defineComponent({
   },
   computed: {
     ListTask () {
-      return this.$store.state.taskList
+      return this.$store.state.tasks.taskList
     }
   },
   created () {

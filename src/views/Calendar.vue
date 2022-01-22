@@ -17,7 +17,7 @@ export default defineComponent({
     }
   },
   created () {
-    this.$store.state.taskList.forEach((task: Itask) => {
+    this.$store.state.tasks.taskList.forEach((task: Itask) => {
       const attr = {
         dates: task.datEnd,
         highlight: {

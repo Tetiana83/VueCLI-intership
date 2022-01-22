@@ -33,11 +33,11 @@ export default defineComponent({
           id: null,
           title: this.title,
           desc: this.desc,
-          datEnd: new Date(this.datEnd).toLocaleString().split(',')[0],
+          datEnd: new Date(this.datEnd).toISOString(),
           new: true,
           status: StatusTaskEnum.Todo
         }
-        this.$store.commit('addTask', task)
+        this.$store.commit('tasks/addTask', task)
         this.title = ''
         this.desc = ''
         this.datEnd = ''
