@@ -39,7 +39,8 @@ export default {
   },
   updateSelectedTask (state: { taskList: Itask[] }, task: Itask) {
     const index = state.taskList.findIndex((item: { id: number }) => item.id === task.id)
-    state.taskList[index] = task
+    state.taskList[index].title = task.title
+    state.taskList[index].desc = task.desc
     const cachUpdate = JSON.parse(localStorage.taskList)
     const cachIndex = cachUpdate.findIndex((item: { id: number }) => item.id === task.id)
     cachUpdate[cachIndex] = task

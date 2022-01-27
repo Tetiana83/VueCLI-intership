@@ -1,25 +1,36 @@
 <template lang="pug">
+.calendar-wrapper(v-if="showCalendar")
+  .calendar
+    v-date-picker(v-model="range" is-range)
+    .calendar-btn-wrapper
+      button(@click="showCalendar = false") Close
+      button(@click="searchingTaskByDateRange()") Search
+.create-search-wrapper
+  .search
+    input(type="text" placeholder="searching..." v-model="searchTitle")
+    button.calendar-btn(@click="showCalendar = !showCalendar") Calendar
+    button.search-btn(@click="searchingTask()") Search
 table.task-table
   tr
     td.col1
       h2 To do / {{todoList.length}}
       draggable#todo(v-model='todoList' group='tasks' :move="checkMove" item-key='id')
         template(#item='{element}')
-          .task-wrapper(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='openTaskDetails(element)')
+          .task-wrapper.todo(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='openTaskDetails(element)')
             h3 {{element.title}}
             p {{getTime(element.datEnd)}}
     td.col2#2
       h2 In Progress / {{inProgressList.length}}
       draggable#inprogress(v-model='inProgressList' group='tasks' :move="checkMove" item-key='id')
         template(#item='{element}')
-          .task-wrapper(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='openTaskDetails(element)')
+          .task-wrapper.inprogress(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='openTaskDetails(element)')
             h3 {{element.title}}
             p {{getTime(element.datEnd)}}
     td.col3#3
       h2 Done / {{doneList.length}}
       draggable#done(v-model="doneList" group="tasks" :move="checkMove" item-key="id")
         template(#item="{element}")
-          .task-wrapper(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='openTaskDetails(element)')
+          .task-wrapper.done(:class="{expired: isExpired(element.datEnd), dayBeforExpired: isdayBeforExpired(element.datEnd)}" @click='openTaskDetails(element)')
             h3 {{element.title}}
             p {{getTime(element.datEnd)}}
 TaskDetailsModalComponent(v-if="isShowModal" :selectedTask="selectedTask" @closeModal="closeModal")
@@ -40,28 +51,21 @@ export default defineComponent({
     return {
       isShowModal: false,
       selectedTask: null,
+      showCalendar: false,
+      searchTitle: null,
+      range: {
+        start: null,
+        end: null
+      },
       todoList: [],
-      inProgressList: [],
-      doneList: []
-    }
-  },
-  computed: {
-    ListTask () {
-      return this.$store.state.tasks.taskList
+      doneList: [],
+      inProgressList: []
     }
   },
   created () {
-    this.ListTask.forEach((task: Itask) => {
-      if (task.status === StatusTaskEnum.Todo) {
-        this.todoList.push(task)
-      }
-      if (task.status === StatusTaskEnum.Inprogress) {
-        this.inProgressList.push(task)
-      }
-      if (task.status === StatusTaskEnum.Done) {
-        this.doneList.push(task)
-      }
-    })
+    this.todoList = this.$store.state.tasks.taskList.filter((task: Itask) => task.status === StatusTaskEnum.Todo)
+    this.doneList = this.$store.state.tasks.taskList.filter((task: Itask) => task.status === StatusTaskEnum.Done)
+    this.inProgressList = this.$store.state.tasks.taskList.filter((task: Itask) => task.status === StatusTaskEnum.Inprogress)
   },
   methods: {
     openTaskDetails (element: Itask) {
@@ -92,6 +96,13 @@ export default defineComponent({
       } else {
         return false
       }
+    },
+    searchingTaskByDateRange () {
+      this.$store.commit('tasks/searchingTaskByDateRange', this.range)
+      this.showCalendar = false
+    },
+    searchingTask () {
+      this.$store.commit('tasks/filteredTask', this.searchTitle)
     }
   }
 })
@@ -155,5 +166,47 @@ export default defineComponent({
   }
   .dayBeforExpired {
     border: 1px solid orange;
+  }
+  .create-search-wrapper {
+    padding: 10px;
+    display: flex;
+    justify-content: end;
+  }
+  .search {
+    display: flex;
+  }
+  .search-btn {
+    cursor: pointer;
+    margin: 0 30px 0 5px ;
+  }
+  .calendar-btn {
+    margin-left: 5px;
+  }
+  .calendar-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  .calendar-btn-wrapper {
+    padding: 5px 0;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .todo {
+    background-color: red;
+  }
+  .done {
+    background-color: green;
+  }
+  .inprogress {
+    background-color: yellow;
   }
 </style>

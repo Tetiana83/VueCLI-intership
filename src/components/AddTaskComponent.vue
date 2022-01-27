@@ -35,7 +35,8 @@ export default defineComponent({
           desc: this.desc,
           datEnd: new Date(this.datEnd).toISOString(),
           new: true,
-          status: StatusTaskEnum.Todo
+          status: StatusTaskEnum.Todo,
+          createdAt: new Date().toISOString()
         }
         this.$store.commit('tasks/addTask', task)
         this.title = ''

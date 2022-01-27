@@ -5,9 +5,17 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import axios from 'axios'
 
 export default defineComponent({
   mounted () {
+    // axios
+    //   .get('http://localhost:3000/tasks')
+    //   .then((response) => {
+    //     console.log('response', response)
+    //   }).catch((err) => {
+    //     console.log(err)
+    //   })
     if (localStorage.taskList) {
       // get LS and move to state
       const array = JSON.parse(localStorage.taskList)

@@ -3,7 +3,7 @@
   SideBarComponent(:currentUser="currentUser", :notifiNum="notifiNum")
   .right-wrapper
     HeaderComponent()
-    router-view(@notifiCount="notifiNum = $event")
+    router-view
 </template>
 
 <script lang="ts">

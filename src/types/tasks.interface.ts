@@ -7,4 +7,5 @@ export default interface Itask {
     datEnd: string;
     new: boolean;
     status: StatusTaskEnum;
+    createdAt: string;
 }

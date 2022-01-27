@@ -1,16 +1,6 @@
 <template lang="pug">
-.calendar-wrapper(v-if="showCalendar")
-  .calendar
-    v-date-picker(v-model="range" is-range)
-    .calendar-btn-wrapper
-      button(@click="showCalendar = false") Close
-      button(@click="searchingTaskByDateRange()") Search
 .create-search-wrapper
   button.create(@click="isShowModal = !isShowModal") Create a new task
-  .search
-    input(type="text" placeholder="searching..." v-model="searchTitle")
-    button.calendar-btn(@click="showCalendar = !showCalendar") Calendar
-    button.search-btn(@click="searchingTask()") Search
 AddTaskComponent(v-if="isShowModal" @toggleModal="toggleModal")
 transition-group(name='bounce' tag='p')
   .content-section(v-for="(task, index) in ListTask" :key="task.id" :class="{blink: task.new}")
@@ -46,13 +36,7 @@ export default defineComponent({
       desc: '',
       datEnd: '',
       color: '#fff',
-      searchTitle: null,
-      filteredListTask: [],
-      showCalendar: false,
-      range: {
-        start: null,
-        end: null
-      }
+      filteredListTask: []
     }
   },
   computed: {
@@ -76,13 +60,6 @@ export default defineComponent({
     },
     getTime (time: string) {
       return moment(time).format('DD/MM/YYYY')
-    },
-    searchingTask () {
-      this.$store.commit('tasks/filteredTask', this.searchTitle)
-    },
-    searchingTaskByDateRange () {
-      this.$store.commit('tasks/searchingTaskByDateRange', this.range)
-      this.showCalendar = false
     }
   }
 })
@@ -116,44 +93,6 @@ export default defineComponent({
   }
   .task-body {
     cursor: pointer;
-  }
-  .search {
-    display: flex;
-  }
-  .search-btn {
-    cursor: pointer;
-    margin: 0 30px 0 5px ;
-  }
-  .create-search-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-  .calendar-btn {
-    margin-left: 5px;
-  }
-  .calendar-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-  .calendar {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-  .calendar-btn-wrapper {
-    padding: 5px 0;
-    display: flex;
-    justify-content: flex-end;
   }
   /*
     my animations
