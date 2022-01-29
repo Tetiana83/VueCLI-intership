@@ -8,16 +8,9 @@ export default {
   },
   removeTask (state: { taskList: Itask[] }, index: number) {
     state.taskList.splice(index, 1)
-    const cachRemove = JSON.parse(localStorage.taskList)
-    cachRemove.splice(index, 1)
-    localStorage.taskList = JSON.stringify(cachRemove) 
   },
   addTask (state: { taskList: Itask[] }, task: Itask) {
-    task.id = state.taskList.length + 1
     state.taskList.unshift(task)
-    const cachList = JSON.parse(localStorage.taskList)
-    cachList.unshift(task)
-    localStorage.taskList = JSON.stringify(cachList)
   },
   filteredTask (state: { taskList: Itask[] }, searchTitle: string) {
     const filteredListTask: Itask[] = []
@@ -38,12 +31,8 @@ export default {
     state.taskList = filteredListTask
   },
   updateSelectedTask (state: { taskList: Itask[] }, task: Itask) {
-    const index = state.taskList.findIndex((item: { id: number }) => item.id === task.id)
+    const index = state.taskList.findIndex((item) => item._id === task._id)
     state.taskList[index].title = task.title
     state.taskList[index].desc = task.desc
-    const cachUpdate = JSON.parse(localStorage.taskList)
-    const cachIndex = cachUpdate.findIndex((item: { id: number }) => item.id === task.id)
-    cachUpdate[cachIndex] = task
-    localStorage.taskList = JSON.stringify(cachUpdate)
   }
 }

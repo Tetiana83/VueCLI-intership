@@ -3,7 +3,7 @@
   button.create(@click="isShowModal = !isShowModal") Create a new task
 AddTaskComponent(v-if="isShowModal" @toggleModal="toggleModal")
 transition-group(name='bounce' tag='p')
-  .content-section(v-for="(task, index) in ListTask" :key="task.id" :class="{blink: task.new}")
+  .content-section(v-for="(task, index) in ListTask" :key="task._id" :class="{blink: task.new}")
     .task-wrapper
       .task-icon(:class="{todo: task.status === 'TODO', inprogress: task.status === 'INPROGRESS', done: task.status === 'DONE'}"  @click="doneTask(index)")
       .task-body(@click="openTaskDetails(task)")
@@ -11,7 +11,7 @@ transition-group(name='bounce' tag='p')
         p {{task.desc}}
       .time
         span {{getTime(task.datEnd)}}
-      button.task-icon(@click="removeTask(index)")
+      button.task-icon(@click="removeTask(task._id, index)")
         img(src='../assets/delete.svg' alt='')
 TaskDetailsModalComponent(v-if="isShowEditModal" :selectedTask="selectedTask" @closeModal="closeModal")
 </template>
@@ -48,8 +48,12 @@ export default defineComponent({
     toggleModal () {
       this.isShowModal = !this.isShowModal
     },
-    removeTask (index: number) {
-      this.$store.commit('tasks/removeTask', index)
+    removeTask (id: string, index: number) {
+      const data = {
+        id,
+        index
+      }
+      this.$store.dispatch('tasks/deleteTask', data)
     },
     openTaskDetails (element: Itask) {
       this.isShowEditModal = !this.isShowEditModal

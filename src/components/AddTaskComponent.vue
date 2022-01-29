@@ -30,15 +30,15 @@ export default defineComponent({
     AddTask () {
       if (this.title !== '' && this.desc !== '' && this.datEnd !== '') {
         const task: Itask = {
-          id: null,
           title: this.title,
           desc: this.desc,
           datEnd: new Date(this.datEnd).toISOString(),
           new: true,
           status: StatusTaskEnum.Todo,
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          color: 'red'
         }
-        this.$store.commit('tasks/addTask', task)
+        this.$store.dispatch('tasks/createTask', task)
         this.title = ''
         this.desc = ''
         this.datEnd = ''

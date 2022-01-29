@@ -1,6 +1,7 @@
 <template lang="pug">
 .window-wrapper
   .modal-task-wrapper
+    .close(@click="this.$emit('closeModal')") X
     input(v-if="isEdit" v-model="form.title" @input="isTextEdit = true")
     h3(v-else) {{selectedTask.title}}
     textarea(v-if="isEdit" v-model="form.desc" @input="isTextEdit = true")
@@ -46,7 +47,7 @@ export default defineComponent({
       this.isEdit = !this.isEdit
       this.isTextEdit = !this.isTextEdit
       this.$emit('closeModal')
-      this.$store.commit('tasks/updateSelectedTask', this.form)
+      this.$store.dispatch('tasks/editTask', this.form)
     },
     getTime (time: string) {
       return moment(time).format('DD/MM/YYYY')
@@ -66,6 +67,7 @@ export default defineComponent({
     text-align: center;
     border-radius: 8px;
     width: 400px;
+    position: relative;
   }
   .modal-task-wrapper > textarea {
     width: 100%;
@@ -75,4 +77,10 @@ export default defineComponent({
     justify-content: flex-end;
     margin: 10px;
   }
+  .close {
+    position: absolute;
+    right: -15px;
+    top: -15px;
+    color: white;
+}
 </style>
